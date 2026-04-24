@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAW
+  TRANSFER
+}
+
+model User {
+  id             String    @id @default(uuid()) @db.Uuid
+  email          String    @unique
+  hashedPassword String
+  fullName       String
+  role           Role      @default(USER)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  accounts       Account[]
+
+  @@index([role])
+  @@index([createdAt])
+}
+
+model Account {
+  id             String        @id @default(uuid()) @db.Uuid
+  userId         String        @db.Uuid
+  accountNumber  String        @unique
+  accountName    String
+  balance        Decimal       @default(0) @db.Decimal(18, 2)
+  currency       String        @default("IDR")
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  user           User          @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  transactions   Transaction[]
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Transaction {
+  id              String          @id @default(uuid()) @db.Uuid
+  accountId       String          @db.Uuid
+  type            TransactionType
+  amount          Decimal         @db.Decimal(18, 2)
+  balanceBefore   Decimal         @db.Decimal(18, 2)
+  balanceAfter    Decimal         @db.Decimal(18, 2)
+  referenceNumber String          @unique
+  description     String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  account         Account         @relation(fields: [accountId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([accountId])
+  @@index([type])
+  @@index([createdAt])
+  @@index([accountId, createdAt])
+}
