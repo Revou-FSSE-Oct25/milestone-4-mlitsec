@@ -325,7 +325,7 @@ npm start
 - Production database migrations can be applied with:
 
 ```powershell
-npm run prisma:deploy
+npm run prisma:migrate:deploy
 ```
 
 ### Recommended Environment Variables For Deployment
@@ -383,20 +383,31 @@ npm run prisma:deploy
    - `DATABASE_URL`
    - `JWT_SECRET`
    - `JWT_EXPIRES_IN`
+   - `PORT`
    - `NODE_ENV=production`
 
-6. Railway will install dependencies and run the build script
-7. Make sure the start command is:
+6. Set the Railway build command to:
 
 ```text
-npm start
+npm run build
 ```
 
-8. Run production migration if needed:
+7. Set the Railway start command to:
 
 ```text
-npm run prisma:deploy
+npm run start:prod
 ```
+
+8. After the database is ready, run production migration:
+
+```text
+npm run prisma:migrate:deploy
+```
+
+9. Open the deployed Railway public URL and verify:
+   - `/health`
+   - `/api/docs`
+   - `/auth/login`
 
 ### Quick Deployment Checklist
 
