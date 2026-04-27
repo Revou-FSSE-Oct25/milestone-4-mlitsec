@@ -5,10 +5,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "prisma generate && nest build",
-    "start": "node dist/main.js",
+    "start": "node dist/src/main.js",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main.js",
+    "start:prod": "node dist/src/main.js",
     "postinstall": "prisma generate",
     "seed": "ts-node prisma/seed.ts",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix",
