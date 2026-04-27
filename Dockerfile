@@ -1,5 +1,5 @@
 # Stage 1: build the application
-FROM node:20-alpine AS builder
+FROM node:20-slim AS builder
 WORKDIR /app
 
 COPY package*.json ./
@@ -13,7 +13,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # Stage 2: production runtime
-FROM node:20-alpine AS runtime
+FROM node:20-slim AS runtime
 WORKDIR /app
 
 ENV NODE_ENV=production
