@@ -12,7 +12,7 @@ import { UserModule } from './user/user.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: process.env.NODE_ENV === 'production' ? undefined : '.env',
       ignoreEnvFile: process.env.NODE_ENV === 'production',
     }),
     PrismaModule,
