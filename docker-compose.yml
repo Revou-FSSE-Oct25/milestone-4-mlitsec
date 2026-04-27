@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  revobank-backend:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+      - PORT=3000
+      - NODE_ENV=production
+    depends_on:
+      - postgres
+    networks:
+      - revobank-network
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=revobank
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - revobank-network
+
+volumes:
+  postgres_data:
+
+networks:
+  revobank-network:
+    driver: bridge
