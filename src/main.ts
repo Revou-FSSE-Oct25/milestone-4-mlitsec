@@ -7,6 +7,8 @@ import { AppModule } from './app.module';
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -33,8 +35,11 @@ async function bootstrap(): Promise<void> {
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, swaggerDocument);
 
-  const port = Number(process.env.PORT ?? 3000);
-  await app.listen(port);
+  const port = Number(process.env.PORT) || 3000;
+
+  await app.listen(port, '0.0.0.0');
+
+  console.log(`RevoBank API running on port ${port}`);
 }
 
 void bootstrap();
